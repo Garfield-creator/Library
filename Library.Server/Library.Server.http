@@ -1,0 +1,6 @@
+@Library.Server_HostAddress = http://localhost:5101
+
+GET {{Library.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
