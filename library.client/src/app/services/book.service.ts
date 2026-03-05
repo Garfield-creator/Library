@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Book } from '../models/book';
+import { BookCreateDto } from '../models/bookCreateDto';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,27 +9,41 @@ import { Observable } from 'rxjs';
 })
 export class BookService {
 
-  private apiUrl = 'https://localhost:5001/api/books';
+  private apiUrl = '/api/books';
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.apiUrl);
+    const token = localStorage.getItem('jwtToken'); // wherever you store it
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<Book[]>(this.apiUrl, { headers });
   }
 
   getById(id: number): Observable<Book> {
-    return this.http.get<Book>(`${this.apiUrl}/${id}`);
+    const token = localStorage.getItem('jwtToken'); // wherever you store it
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<Book>(`${this.apiUrl}/${id}`, { headers });
   }
 
-  create(book: Book): Observable<Book> {
-    return this.http.post<Book>(this.apiUrl, book);
+  create(book: BookCreateDto): Observable<BookCreateDto> {
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.post<BookCreateDto>(this.apiUrl, book, { headers });
   }
 
   update(id: number, book: Book) {
-    return this.http.put(`${this.apiUrl}/${id}`, book);
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.put(`${this.apiUrl}/${id}`, book, { headers });
   }
 
   delete(id: number) {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    const token = localStorage.getItem('jwtToken');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
   }
 }

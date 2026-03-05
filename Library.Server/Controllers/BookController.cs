@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Library.Server.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [Route("api/books")]
 public class BooksController : ControllerBase

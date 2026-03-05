@@ -3,20 +3,20 @@
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <div class="mb-3">
-      <label>Title</label>
-      <input class="form-control" formControlName="title">
+      <label>title</label>
+      <input class="form-control" formControlName="Title">
     </div>
 
     <div class="mb-3">
-      <label>Author</label>
-      <input class="form-control" formControlName="author">
+      <label>author</label>
+      <input class="form-control" formControlName="Author">
     </div>
 
     <div class="mb-3">
-      <label>Publishing Date</label>
+      <label>publishing Date</label>
       <input type="date"
              class="form-control"
-             formControlName="publishingDate">
+             formControlName="PublishingDate">
     </div>
 
     <button class="btn btn-success" type="submit">Save</button>
