@@ -50,6 +50,7 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BookReadDto>> Post(BookCreateDto dto)
     {
+        Console.WriteLine(dto);
         var book = new Book
         {
             Title = dto.Title,

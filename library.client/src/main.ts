@@ -7,6 +7,6 @@ import { App } from './app/app';
 bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([() => new TokenInterceptor()]))
+    provideHttpClient()
   ]
 });

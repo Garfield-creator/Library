@@ -13,7 +13,7 @@ var key = Encoding.UTF8.GetBytes(jwtKey);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("Default")));
 
 // Add Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -36,12 +36,26 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy => policy
+            .WithOrigins("https://localhost:57829")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAngular");
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

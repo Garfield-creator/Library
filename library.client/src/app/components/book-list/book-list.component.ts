@@ -1,22 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BookReadDto } from '../Models/book-read-dto';
+import { BookService } from '../../services/book.service';
+import { Book } from '../../models/book';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.css']
+  imports: [CommonModule],
+  templateUrl: './book-list.component.html'
 })
 export class BookListComponent implements OnInit {
-  books: BookReadDto[] = [];
 
-  constructor(private http: HttpClient) { }
+  books: Book[] = [];
 
-  ngOnInit(): void {
-    this.http.get<BookReadDto[]>('https://localhost:5001/api/books')
-      .subscribe(result => {
-        this.books = result;
-      });
+  constructor(
+    private bookService: BookService,
+    private router: Router
+  ) { }
+
+  ngOnInit() {
+    this.loadBooks();
+  }
+
+  loadBooks() {
+    this.bookService.getAll().subscribe(data => {
+      this.books = data;
+    });
+  }
+
+  delete(id: number) {
+    this.bookService.delete(id).subscribe(() => {
+      this.loadBooks();
+    });
+  }
+
+  goToCreate() {
+    this.router.navigate(['/books/create']);
+  }
+
+  goToEdit(id: number) {
+    this.router.navigate(['/books/edit', id]);
   }
 }
