@@ -44,27 +44,27 @@ export class BookFormComponent implements OnInit {
 
   submit() {
     const formValue = this.form.value;
-
+    console.log("Submit clicked");
     const dto = {
-      Title: formValue.title,
-      Author: formValue.author,
-      PublishingDate: formValue.publishingDate // string "YYYY-MM-DD" works
+      title: formValue.title,
+      author: formValue.author,
+      publishingDate: formValue.publishingDate // string "YYYY-MM-DD" works
     };
-
+    console.log(dto);
     this.bookService.create(dto)
       .subscribe(() => this.router.navigate(['/books']));
   }
 
-  submit2() {
-    console.log("Submit clicked");
-    const book = this.form.value as BookCreateDto;
-    console.log(book);
-    if (this.bookId) {
-      this.bookService.update(this.bookId, book)
-        .subscribe(() => this.router.navigate(['/books']));
-    } else {
-      this.bookService.create(book)
-        .subscribe(() => this.router.navigate(['/books']));
-    }
-  }
+  //submit() {
+  //  console.log("Submit clicked");
+  //  const book = this.form.value as BookCreateDto;
+  //  console.log(book);
+  //  if (this.bookId) {
+  //    this.bookService.update(this.bookId, book)
+  //      .subscribe(() => this.router.navigate(['/books']));
+  //  } else {
+  //    this.bookService.create(book)
+  //      .subscribe(() => this.router.navigate(['/books']));
+   // }
+  //}
 }

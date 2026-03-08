@@ -6,9 +6,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT key
-var jwtKey = "THIS_IS_MY_SUPER_SECRET_KEY_12345";
-var key = Encoding.UTF8.GetBytes(jwtKey);
 
 // DB Context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -20,6 +17,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // Authentication
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -29,9 +28,14 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
@@ -40,29 +44,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 🔹 Enable CORS for Angular dev server
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAngular",
-//        policy => policy
-//            .WithOrigins("https://localhost:57829", "https://localhost:57829/books/create") // Angular port
-//            .AllowAnyHeader()
-//            .AllowAnyMethod());
-//});
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Angular", p =>
-    p.AllowAnyOrigin()
+    p.WithOrigins("https://localhost:57829")
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .AllowAnyHeader()
+    .AllowCredentials());
 });
 
 
 var app = builder.Build();
 
-// Middleware order
-app.UseCors("AllowAngular");
+app.UseCors("Angular");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

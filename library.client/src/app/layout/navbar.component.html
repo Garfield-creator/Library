@@ -1,0 +1,39 @@
+<nav class="navbar">
+  <div class="nav-container">
+
+    <a class="logo" routerLink="/">MyApp</a>
+
+    <ul class="nav-links">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Home
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/quote" routerLinkActive="active">
+          Quotes
+        </a>
+      </li>
+
+      <li *ngIf="!isLoggedIn">
+        <a routerLink="/login" routerLinkActive="active">
+          Login
+        </a>
+      </li>
+
+      <li *ngIf="!isLoggedIn">
+        <a routerLink="/register" routerLinkActive="active">
+          Register
+        </a>
+      </li>
+
+      <li *ngIf="isLoggedIn">
+        <button class="btn btn-link nav-logout" (click)="logout()">
+          Logout
+        </button>
+      </li>
+    </ul>
+
+  </div>
+</nav>
