@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 
 namespace Library.Server.Controllers;
 
-//[Authorize]
 [ApiController]
 [Route("api/books")]
 public class BooksController : ControllerBase
@@ -47,6 +46,7 @@ public class BooksController : ControllerBase
     }
 
     // POST: api/books
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<BookReadDto>> Post(BookCreateDto dto)
     {
@@ -73,6 +73,7 @@ public class BooksController : ControllerBase
     }
 
     // PUT: api/books/5
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Put(int id, BookUpdateDto dto)
     {
@@ -91,6 +92,7 @@ public class BooksController : ControllerBase
     }
 
     // DELETE: api/books/5
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
