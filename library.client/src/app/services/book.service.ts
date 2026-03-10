@@ -25,7 +25,7 @@ export class BookService {
     return this.http.post<BookCreateDto>(this.apiUrl, book);
   }
 
-  update(id: number, book: Book) {
+  update(id: number, book: BookCreateDto) {
     return this.http.put(`${this.apiUrl}/${id}`, book);
   }
 

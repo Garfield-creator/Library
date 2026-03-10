@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly JwtService _jwtService;
 
     public AuthController(
-        UserManager<ApplicationUser> userManager,
+        UserManager<IdentityUser> userManager,
         JwtService jwtService)
     {
         _userManager = userManager;
@@ -22,15 +22,13 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
 
         var existingUser = await _userManager.FindByNameAsync(model.Username);
 
         if (existingUser != null)
             return BadRequest("Username already exists");
 
-        var user = new ApplicationUser
+        var user = new IdentityUser
         {
             UserName = model.Username,
             Email = model.Email

@@ -3,7 +3,6 @@ import { BookService } from '../../services/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { BookCreateDto } from '../../models/bookCreateDto';
 
 @Component({
   selector: 'app-book-form',
@@ -44,27 +43,20 @@ export class BookFormComponent implements OnInit {
 
   submit() {
     const formValue = this.form.value;
-    console.log("Submit clicked");
     const dto = {
       title: formValue.title,
       author: formValue.author,
-      publishingDate: formValue.publishingDate // string "YYYY-MM-DD" works
+      publishingDate: formValue.publishingDate
     };
-    console.log(dto);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.bookId = +id;
+      this.bookService.update(this.bookId, dto)
+        .subscribe(() => this.router.navigate(['/books']));
+    }
+    else {
     this.bookService.create(dto)
-      .subscribe(() => this.router.navigate(['/books']));
+        .subscribe(() => this.router.navigate(['/books']));
+    }
   }
-
-  //submit() {
-  //  console.log("Submit clicked");
-  //  const book = this.form.value as BookCreateDto;
-  //  console.log(book);
-  //  if (this.bookId) {
-  //    this.bookService.update(this.bookId, book)
-  //      .subscribe(() => this.router.navigate(['/books']));
-  //  } else {
-  //    this.bookService.create(book)
-  //      .subscribe(() => this.router.navigate(['/books']));
-   // }
-  //}
 }

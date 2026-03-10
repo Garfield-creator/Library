@@ -1,37 +1,37 @@
 <nav class="navbar">
   <div class="nav-container">
 
-    <a class="logo" routerLink="/">MyApp</a>
+    <a class="logo" routerLink="/">Bokapp</a>
 
     <ul class="nav-links">
       <li>
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          Home
+        <a routerLink="/books" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Boklista
         </a>
       </li>
 
-      <li>
+      <li *ngIf="isLoggedIn">
         <a routerLink="/quote" routerLinkActive="active">
-          Quotes
+          Mina citat
         </a>
       </li>
 
       <li *ngIf="!isLoggedIn">
         <a routerLink="/login" routerLinkActive="active">
-          Login
+          Logga in
         </a>
       </li>
 
       <li *ngIf="!isLoggedIn">
         <a routerLink="/register" routerLinkActive="active">
-          Register
+          Registrera
         </a>
       </li>
 
       <li *ngIf="isLoggedIn">
-        <button class="btn btn-link nav-logout" (click)="logout()">
-          Logout
-        </button>
+        <a class="nav-logout" (click)="logout()">
+          Logga ut
+        </a>
       </li>
     </ul>
 

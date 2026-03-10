@@ -1,1 +1,19 @@
-<p>quote-form works!</p>
+<div class="container mt-4">
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="mb-3">
+      <label>Text</label>
+      <textarea class="form-control" rows="3" formControlName="text"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label>Source</label>
+      <input class="form-control" formControlName="source">
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+
+  </form>
+
+</div>

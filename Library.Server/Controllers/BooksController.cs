@@ -48,7 +48,7 @@ public class BooksController : ControllerBase
     // POST: api/books
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<BookReadDto>> Post(BookCreateDto dto)
+    public async Task<ActionResult<BookReadDto>> Post(BookReadDto dto)
     {
         Console.WriteLine(dto);
         var book = new Book
@@ -57,7 +57,7 @@ public class BooksController : ControllerBase
             Author = dto.Author,
             PublishingDate = dto.PublishingDate
         };
-
+        Console.WriteLine(book);
         _db.Books.Add(book);
         await _db.SaveChangesAsync();
 
@@ -68,7 +68,7 @@ public class BooksController : ControllerBase
             Author = book.Author,
             PublishingDate = book.PublishingDate
         };
-
+        Console.WriteLine(readDto);
         return CreatedAtAction(nameof(GetById), new { id = book.Id }, readDto);
     }
 

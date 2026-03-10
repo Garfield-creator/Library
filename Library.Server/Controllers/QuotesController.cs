@@ -1,0 +1,129 @@
+using Library.Server.Dto;
+using Library.Server.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Security.Claims;
+
+namespace Library.Server.Controllers;
+
+[ApiController]
+[Route("api/quotes")]
+public class QuotesController : ControllerBase
+{
+    private readonly AppDbContext _db;
+
+    public QuotesController(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    // GET: api/quotes
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<QuoteReadDto>>> GetAll()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var quotes = await _db.Quotes
+            .AsNoTracking()
+            .Where(q => q.UserId == userId)
+            .Select(QuoteSelector)
+            .ToListAsync();
+
+        return Ok(quotes);
+    }
+
+    // GET: api/quotes/5
+    [Authorize]
+    public async Task<ActionResult<QuoteReadDto>> GetById(int id)
+    {
+        var quote = await _db.Quotes
+            .AsNoTracking()
+            .Select(QuoteSelector)
+            .FirstOrDefaultAsync(q => q.Id == id);
+
+        if (quote == null)
+            return NotFound();
+
+        return Ok(quote);
+    }
+
+    // POST: api/quotes
+    [Authorize]
+    [HttpPost]
+    public async Task<ActionResult<QuoteReadDto>> Post(QuoteCreateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var quote = new Quote
+        {
+            Text = dto.Text,
+            Source = dto.Source,
+            UserId = userId
+        };
+
+        _db.Quotes.Add(quote);
+        await _db.SaveChangesAsync();
+
+        var readDto = new QuoteReadDto
+        {
+            Id = quote.Id,
+            Text = quote.Text,
+            Source = quote.Source
+        };
+
+        return CreatedAtAction(nameof(GetById), new { id = quote.Id }, readDto);
+    }
+
+    // PUT: api/quotes/5
+    [Authorize]
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Put(int id, QuoteUpdateDto dto)
+    {
+        var quote = await _db.Quotes.FindAsync(id);
+
+        if (quote == null)
+            return NotFound();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (quote.UserId != userId)
+            return Forbid();
+
+        quote.Text = dto.Text;
+        quote.Source = dto.Source;
+
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    // DELETE: api/quotes/5
+    [Authorize]
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var quote = await _db.Quotes.FindAsync(id);
+
+        if (quote == null)
+            return NotFound();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (quote.UserId != userId)
+            return Forbid();
+
+        _db.Quotes.Remove(quote);
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private static readonly Expression<Func<Quote, QuoteReadDto>> QuoteSelector =
+        q => new QuoteReadDto
+        {
+            Id = q.Id,
+            Text = q.Text,
+            Source = q.Source
+        };
+}
+
