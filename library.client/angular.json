@@ -26,20 +26,19 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/library.client",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
+            "index": "src/index.html",
+            "outputPath": "dist/library.client",
+            "polyfills": "src/polyfills.ts",
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles.css"
-            ]
+            ],
+            "tsConfig": "tsconfig.app.json"
           },
         "configurations": {
           "production": {
