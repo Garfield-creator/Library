@@ -3,13 +3,16 @@
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <div class="mb-3">
-      <label>Text</label>
+      <label>Citat</label>
       <textarea class="form-control" rows="3" formControlName="text"></textarea>
+      <div class="text-danger" *ngIf="form.get('text')?.errors?.['required'] && submitted">Citat är obligatoriskt.</div>
+      <div class="text-danger" *ngIf="form.get('text')?.errors?.['maxlength']">Citatet måste vara kortare än 400 tecken.</div>
     </div>
 
     <div class="mb-3">
-      <label>Source</label>
+      <label>Källa</label>
       <input class="form-control" formControlName="source">
+      <div class="text-danger" *ngIf="form.get('source')?.errors?.['required'] && submitted">Källa är obligatoriskt.</div>
     </div>
 
     <button class="btn btn-success" type="submit">Save</button>

@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Book } from '../models/book';
 import { BookCreateDto } from '../models/bookCreateDto';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
 
-  private apiUrl = 'https://localhost:7225/api/books';
+  private apiUrl = environment.apiUrl + '/books';
 
   constructor(private http: HttpClient) { }
 

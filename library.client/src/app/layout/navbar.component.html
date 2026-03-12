@@ -1,39 +1,57 @@
 <nav class="navbar">
   <div class="nav-container">
 
+    <i class="fa fa-book"></i>
     <a class="logo" routerLink="/">Bokapp</a>
 
-    <ul class="nav-links">
-      <li>
+    <!-- Hamburger button -->
+    <button class="hamburger" (click)="menuOpen = !menuOpen">
+      <i class="fa fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" [class.open]="menuOpen">
+      <li (click)="menuOpen=false">
+        <i class="fa-solid fa-list"></i>
         <a routerLink="/books" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           Boklista
         </a>
       </li>
 
-      <li *ngIf="isLoggedIn">
+      <li *ngIf="isLoggedIn" (click)="menuOpen=false">
+        <i class="fa-solid fa-quote-left"></i>
         <a routerLink="/quote" routerLinkActive="active">
           Mina citat
         </a>
       </li>
 
-      <li *ngIf="!isLoggedIn">
+      <li *ngIf="!isLoggedIn" (click)="menuOpen=false">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
         <a routerLink="/login" routerLinkActive="active">
           Logga in
         </a>
       </li>
 
-      <li *ngIf="!isLoggedIn">
+      <li *ngIf="!isLoggedIn" (click)="menuOpen=false">
         <a routerLink="/register" routerLinkActive="active">
+        <i class="fa-solid fa-user-plus"></i>
           Registrera
         </a>
       </li>
 
-      <li *ngIf="isLoggedIn">
+      <li *ngIf="isLoggedIn" (click)="menuOpen=false">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
         <a class="nav-logout" (click)="logout()">
           Logga ut
         </a>
       </li>
     </ul>
-
+  </div>
+  <div class="text-end">
+    <button *ngIf="!isDarkTheme" (click)="toggleTheme()" class="btn btn-outline-secondary">
+      🌙
+    </button>
+    <button *ngIf="isDarkTheme" (click)="toggleTheme()" class="btn btn-outline-secondary">
+      ☀️
+    </button>
   </div>
 </nav>

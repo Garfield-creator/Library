@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Quote } from '../models/quote';
 import { QuoteCreateDto } from '../models/quoteCreateDto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuoteService {
 
-  private apiUrl = 'https://localhost:7225/api/quotes';
+  private apiUrl = environment.apiUrl + '/quotes';
 
   constructor(private http: HttpClient) { }
 

@@ -8,11 +8,13 @@ using System.Security.Claims;
 
 namespace Library.Server.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/quotes")]
 public class QuotesController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private const int MaxQuotesPerUser = 5;
 
     public QuotesController(AppDbContext db)
     {
@@ -20,10 +22,12 @@ public class QuotesController : ControllerBase
     }
 
     // GET: api/quotes
-    [Authorize]
+    [HttpGet()]
     public async Task<ActionResult<IEnumerable<QuoteReadDto>>> GetAll()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized();
 
         var quotes = await _db.Quotes
             .AsNoTracking()
@@ -35,13 +39,18 @@ public class QuotesController : ControllerBase
     }
 
     // GET: api/quotes/5
-    [Authorize]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<QuoteReadDto>> GetById(int id)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized();
+
         var quote = await _db.Quotes
             .AsNoTracking()
+            .Where(q => q.UserId == userId && q.Id == id)
             .Select(QuoteSelector)
-            .FirstOrDefaultAsync(q => q.Id == id);
+            .FirstOrDefaultAsync();
 
         if (quote == null)
             return NotFound();
@@ -50,11 +59,24 @@ public class QuotesController : ControllerBase
     }
 
     // POST: api/quotes
-    [Authorize]
     [HttpPost]
     public async Task<ActionResult<QuoteReadDto>> Post(QuoteCreateDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized();
+
+        var existingCount = await _db.Quotes
+            .AsNoTracking()
+            .CountAsync(q => q.UserId == userId);
+
+        if (existingCount >= MaxQuotesPerUser)
+        {
+            return Conflict(new
+            {
+                message = $"Max {MaxQuotesPerUser} quotes per user."
+            });
+        }
 
         var quote = new Quote
         {
@@ -77,7 +99,6 @@ public class QuotesController : ControllerBase
     }
 
     // PUT: api/quotes/5
-    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Put(int id, QuoteUpdateDto dto)
     {
@@ -87,6 +108,8 @@ public class QuotesController : ControllerBase
             return NotFound();
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized();
         if (quote.UserId != userId)
             return Forbid();
 
@@ -99,7 +122,6 @@ public class QuotesController : ControllerBase
     }
 
     // DELETE: api/quotes/5
-    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -109,6 +131,8 @@ public class QuotesController : ControllerBase
             return NotFound();
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+            return Unauthorized();
         if (quote.UserId != userId)
             return Forbid();
 

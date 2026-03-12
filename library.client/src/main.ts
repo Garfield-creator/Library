@@ -2,14 +2,17 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app/app.routes';
-import { App } from './app/app';  // Your root component above
+import { App } from './app/app';
 import { authInterceptor } from './app/interceptors/auth-interceptor';
+import { ThemeService } from './app/services/theme.service';
+
+// Initialize theme BEFORE Angular bootstraps
+const themeService = new ThemeService();
+themeService.initTheme();
 
 bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(
-      withInterceptors([authInterceptor])
-    )
+    provideHttpClient(withInterceptors([authInterceptor]))
   ]
 });

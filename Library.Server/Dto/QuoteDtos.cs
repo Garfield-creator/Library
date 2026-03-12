@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Library.Server.Dto;
 
 public class QuoteReadDto
@@ -9,13 +11,21 @@ public class QuoteReadDto
 
 public class QuoteCreateDto
 {
+    [Required]
+    [StringLength(400)]
     public string Text { get; set; }
+
+    [Required]
+    [StringLength(100)]
     public string Source { get; set; }
 }
 
 public class QuoteUpdateDto
 {
+    [StringLength(400)]
     public string Text { get; set; }
+
+    [StringLength(100)]
     public string Source { get; set; }
 }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,7 +19,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   onSubmit(): void {
@@ -30,11 +31,20 @@ export class LoginComponent {
       next: () => {
         this.loading = false;
         this.router.navigate(['/books']);
+        this.cdr.detectChanges();
       },
       error: err => {
         this.loading = false;
-        this.error = 'Login failed. Please check your credentials.';
+        if (err.status === 401) {
+          this.error = 'Invalid username or password.';
+        } else if (err.status === 0) {
+          this.error = 'Unable to reach server. Please check your connection.';
+        } else {
+          this.error = 'An unexpected error occurred while logging in.';
+        }
         console.error('Login error', err);
+        // Make sure the view updates and show a visible popup
+        this.cdr.detectChanges();
       }
     });
   }

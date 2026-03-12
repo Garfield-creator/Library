@@ -55,7 +55,7 @@ export class BookListComponent implements OnInit {
   }
 
   confirmDelete(id: number): void {
-    if (confirm('Are you sure you want to delete this book?')) {
+    if (confirm('Är du säker på att du vill ta bort den här boken?')) {
       this.delete(id);
     }
   }

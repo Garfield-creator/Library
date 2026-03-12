@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface AuthResponse {
   token: string;
@@ -11,7 +12,7 @@ interface AuthResponse {
 })
 export class AuthService {
 
-  private apiUrl = 'https://localhost:7225/api/auth';
+  private apiUrl = environment.apiUrl + '/auth';
   private readonly tokenKey = 'jwtToken';
 
   constructor(private http: HttpClient) { }
@@ -37,8 +38,24 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.tokenKey);
+  const token = this.getToken();
+  if (!token) {
+    return false;
   }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expMs = payload.exp * 1000; // exp is in seconds
+    if (Date.now() > expMs) {
+      this.logout(); // remove token
+      return false;
+    }
+    return true;
+  } catch {
+    this.logout();
+    return false;
+  }
+}
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);

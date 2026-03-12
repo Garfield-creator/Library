@@ -2,80 +2,52 @@
 
   <div class="row mb-3">
     <div class="col-md-6" *ngIf="isLoggedIn">
-      <button class="btn btn-primary" (click)="goToCreate()">
-        Add quote
+      <button class="btn btn-primary"
+              (click)="goToCreate()"
+              [disabled]="quotes.length >= maxQuotesPerUser">
+        Lägg till citat
       </button>
-    </div>
-    <div class="col-md-6 text-md-end mt-2 mt-md-0">
-      <input
-        type="text"
-        class="form-control d-inline-block w-75"
-        placeholder="Search by text or source..."
-        [ngModel]="searchTerm"
-        (ngModelChange)="onSearchChange($event)">
+
+      <div class="text-muted mt-2" *ngIf="quotes.length >= maxQuotesPerUser">
+        Du har nått maxgränsen på {{ maxQuotesPerUser }} citat.
+      </div>
     </div>
   </div>
 
-  <table class="table table-bordered table-striped">
+  <div class="row">
 
-    <thead>
-      <tr>
-        <th>Text</th>
-        <th>Source</th>
-        <th *ngIf="isLoggedIn">Actions</th>
-      </tr>
-    </thead>
+    <div class="col-md-6 col-lg-4 mb-3" *ngFor="let quote of quotes">
+      <div class="card h-100">
 
-    <tbody>
+        <div class="card-body">
+          <blockquote class="blockquote mb-2">
+            <p class="mb-0">"{{ quote.text }}"</p>
+          </blockquote>
 
-      <tr *ngFor="let quote of pagedQuotes">
-        <td>{{ quote.text }}</td>
-        <td>{{ quote.source }}</td>
-        <td *ngIf="isLoggedIn">
+          <footer class="blockquote-footer mt-2">
+            {{ quote.source }}
+          </footer>
+        </div>
+
+        <div class="card-footer border-top-0" *ngIf="isLoggedIn">
           <button class="btn btn-warning btn-sm me-2"
                   (click)="goToEdit(quote.id!)">
             Edit
           </button>
+
           <button class="btn btn-danger btn-sm"
                   (click)="confirmDelete(quote.id!)">
             Delete
           </button>
-        </td>
-      </tr>
+        </div>
 
-      <tr *ngIf="filteredCount === 0">
-        <td [attr.colspan]="isLoggedIn ? 3 : 2" class="text-center">
-          No quotes available
-        </td>
-      </tr>
+      </div>
+    </div>
 
-    </tbody>
+    <div *ngIf="quotes.length === 0" class="col-12 text-center text-muted">
+      Inga citat tillgängliga. Lägg gärna till några!
+    </div>
 
-  </table>
-
-  <nav *ngIf="filteredCount > pageSize" aria-label="Quote pagination">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="onPageChange(currentPage - 1)">
-          Previous
-        </button>
-      </li>
-
-      <li
-        class="page-item"
-        *ngFor="let page of [].constructor(totalPages); let i = index"
-        [class.active]="currentPage === i + 1">
-        <button class="page-link" (click)="onPageChange(i + 1)">
-          {{ i + 1 }}
-        </button>
-      </li>
-
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="onPageChange(currentPage + 1)">
-          Next
-        </button>
-      </li>
-    </ul>
-  </nav>
+  </div>
 
 </div>

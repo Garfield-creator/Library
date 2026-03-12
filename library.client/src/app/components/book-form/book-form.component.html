@@ -1,26 +1,23 @@
 <div class="container mt-4">
-
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <div class="mb-3">
-      <label>title</label>
+      <label>Titel</label>
       <input class="form-control" formControlName="title">
+      <div class="text-danger" *ngIf="form.get('title')?.errors?.['required'] && submitted">Titel är obligatorisk.</div>
+      <div class="text-danger" *ngIf="form.get('title')?.errors?.['maxlength']">Titeln måste vara kortare än 200 tecken.</div>
     </div>
 
     <div class="mb-3">
-      <label>author</label>
+      <label>Författare</label>
       <input class="form-control" formControlName="author">
+      <div class="text-danger" *ngIf="submitted && form.get('author')?.errors?.['required']">Författare är obligatoriskt.</div>
     </div>
 
     <div class="mb-3">
-      <label>publishing Date</label>
-      <input type="date"
-             class="form-control"
-             formControlName="publishingDate">
+      <label>Publiseringsdatum</label>
+      <input type="date" class="form-control" formControlName="publishingDate">
+      <div class="text-danger" *ngIf="submitted && form.get('publishingDate')?.errors?.['required']">Publiseringsdatum är obligatoriskt.</div>
     </div>
-
     <button class="btn btn-success" type="submit">Save</button>
-
   </form>
-
-</div>
