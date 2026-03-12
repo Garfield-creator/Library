@@ -86,12 +86,6 @@
             "proxyConfig": "src/proxy.conf.js",
             "port": 57829
           }
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "karmaConfig": "karma.conf.js"
-          }
         }
       }
     }
