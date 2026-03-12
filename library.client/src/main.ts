@@ -6,7 +6,6 @@ import { App } from './app/app';
 import { authInterceptor } from './app/interceptors/auth-interceptor';
 import { ThemeService } from './app/services/theme.service';
 
-// Initialize theme BEFORE Angular bootstraps
 const themeService = new ThemeService();
 themeService.initTheme();
 
