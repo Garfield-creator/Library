@@ -32,7 +32,7 @@
             ],
             "index": "src/index.html",
             "outputPath": "dist/library.client",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [ "src/polyfills.ts" ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
