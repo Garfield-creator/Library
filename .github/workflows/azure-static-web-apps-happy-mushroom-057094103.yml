@@ -9,7 +9,18 @@ on:
     branches:
       - master
 
+
+
 jobs:
+  angular_build_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Angular
+        run: |
+          cd library.client
+          npm install
+          npm run build
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
@@ -43,6 +54,7 @@ jobs:
           app_location: "./library.client" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "../dist/MikaelRedCodeLibrary/browser" # Built app content directory - optional
+          skip_app_build: true
           app_build_command: "npm install && npm run build"
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
@@ -57,6 +69,7 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "close"
+
 
 
 
