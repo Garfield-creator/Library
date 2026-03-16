@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 interface AuthResponse {
@@ -21,7 +21,10 @@ export class AuthService {
     const body = { username, email, password };
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, body)
       .pipe(
-        tap(res => this.setToken(res.token))
+        tap(res => this.setToken(res.token)),
+        catchError(err => {
+          return throwError(() => err);
+        })
       );
   }
 
@@ -29,7 +32,10 @@ export class AuthService {
     const body = { username, password };
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, body)
       .pipe(
-        tap(res => this.setToken(res.token))
+        tap(res => this.setToken(res.token)),
+        catchError(err => {
+          return throwError(() => err);
+        })
       );
   }
 

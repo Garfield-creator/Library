@@ -19,7 +19,7 @@ export class QuoteFormComponent implements OnInit {
   submitted = false;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private quoteService: QuoteService,
     private route: ActivatedRoute,
     private router: Router
@@ -28,7 +28,7 @@ export class QuoteFormComponent implements OnInit {
   ngOnInit(): void {
     this.submitted = false;
 
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       text: ['', [Validators.required, Validators.maxLength(400)]],
       source: ['', [Validators.required]]
     });

@@ -20,7 +20,7 @@ export class QuoteListComponent implements OnInit {
   constructor(
     private quoteService: QuoteService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef,
     private authService: AuthService
   ) { }
 
@@ -31,7 +31,7 @@ export class QuoteListComponent implements OnInit {
   loadQuotes(): void {
     this.quoteService.getAll().subscribe(data => {
       this.quotes = data;
-      this.cdr.detectChanges();
+      this.changeDetector.detectChanges();
     });
   }
 

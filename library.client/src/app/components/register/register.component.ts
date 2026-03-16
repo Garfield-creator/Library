@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,8 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   onSubmit(): void {
@@ -32,10 +33,20 @@ export class RegisterComponent {
         this.loading = false;
         this.router.navigate(['/books']);
       },
-      error: err => {
+      error: (err) => {
+
         this.loading = false;
-        this.error = 'Registration failed. Please check your details.';
-        console.error('Register error', err);
+        if (err.error?.message) {
+          this.error = JSON.stringify(err.error.message);
+        } else if (err.error?.errors) {
+          const messages = Object.values(err.error.errors)
+            .flat()
+            .join(' ')
+          this.error = messages;
+        } else {
+          this.error = "Registrering misslyckades. Försök igen senare.";
+        }
+        this.changeDetector.detectChanges();
       }
     });
   }

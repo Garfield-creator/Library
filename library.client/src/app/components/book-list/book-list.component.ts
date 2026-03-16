@@ -24,7 +24,7 @@ export class BookListComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef,
     private authService: AuthService
   ) { }
 
@@ -36,7 +36,7 @@ export class BookListComponent implements OnInit {
     this.bookService.getAll().subscribe(data => {
       this.books = data;
       this.applyFilterAndPagination();
-      this.cdr.detectChanges();
+      this.changeDetector.detectChanges();
     });
   }
 

@@ -18,7 +18,7 @@ export class BookFormComponent implements OnInit {
   submitted = false;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private bookService: BookService,
     private route: ActivatedRoute,
     private router: Router
@@ -27,7 +27,7 @@ export class BookFormComponent implements OnInit {
   ngOnInit() {
     this.submitted = false;
 
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(200)]],
       author: ['', [Validators.required]],
       publishingDate: ['', [Validators.required]]

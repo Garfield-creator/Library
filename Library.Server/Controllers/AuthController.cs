@@ -22,11 +22,18 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         var existingUser = await _userManager.FindByNameAsync(model.Username);
 
         if (existingUser != null)
-            return BadRequest("Username already exists");
+            return BadRequest(new { message = "Användarnamnet är upptaget" });
+
+        var existingEmail = await _userManager.FindByEmailAsync(model.Email);
+
+        if (existingEmail != null)
+            return BadRequest(new { message = "Email-adressen är upptagen" });
 
         var user = new IdentityUser
         {
@@ -37,7 +44,7 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
-            return BadRequest(result.Errors);
+            return BadRequest(new { message = "Registrering misslyckades" });
 
         var token = _jwtService.GenerateToken(user);
 
