@@ -41,7 +41,7 @@
     <button
       type="submit"
       class="btn btn-primary mt-3"
-      [disabled]="registerForm.invalid || loading">
+      [disabled]="registerForm.invalid || submitted">
       {{ loading ? 'Registrerar...' : 'Registrera' }}
     </button>
   </form>

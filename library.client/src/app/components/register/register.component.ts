@@ -1,41 +1,57 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
 
-  username = '';
-  email = '';
-  password = '';
+  form!: FormGroup;
   error: string | null = null;
-  loading = false;
+  submitted = false;
 
   constructor(
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private changeDetector: ChangeDetectorRef
   ) { }
 
-  onSubmit(): void {
-    this.error = null;
-    this.loading = true;
+  ngOnInit() {
 
-    this.authService.register(this.username, this.email, this.password).subscribe({
+    this.form = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
+    });
+  }
+
+  onSubmit(): void {
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.error = null;
+    this.submitted = true;
+
+    const { username, email, password } = this.form.value;
+
+    this.authService.register(username, email, password).subscribe({
       next: () => {
-        this.loading = false;
+        this.submitted = false;
         this.router.navigate(['/books']);
       },
       error: (err) => {
 
-        this.loading = false;
+        this.submitted = false;
         if (err.error?.message) {
           this.error = JSON.stringify(err.error.message);
         } else if (err.error?.errors) {
