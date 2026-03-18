@@ -18,6 +18,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 // Authentication
+Console.WriteLine("JWT KEY: " + builder.Configuration["Jwt:Key"]);
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(options =>
