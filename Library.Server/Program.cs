@@ -17,6 +17,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+var jwtKey = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is missing from configuration");
+}
+
 // Authentication
 Console.WriteLine("JWT KEY: " + builder.Configuration["Jwt:Key"]);
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
