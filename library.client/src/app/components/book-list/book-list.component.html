@@ -27,7 +27,7 @@
         <tr>
           <th>Titel</th>
           <th>Författare</th>
-          <th>Publiseringsdatum</th>
+          <th>Publicerad</th>
           <th *ngIf="isLoggedIn">Åtgärder</th>
         </tr>
       </thead>
@@ -44,13 +44,13 @@
             <button class="btn btn-warning btn-sm me-2"
                     (click)="goToEdit(book.id)">
               <i class="fa fa-edit me-1"></i>
-              Redigera
+              <span class="book-text">Redigera</span>
             </button>
 
             <button class="btn btn-danger btn-sm"
                     (click)="confirmDelete(book.id)">
               <i class="fa fa-trash me-1"></i>
-              Radera
+              <span class="book-text">Radera</span>
             </button>
 
           </td>

@@ -4,7 +4,6 @@
     <i class="fa fa-book"></i>
     <a class="logo" routerLink="/">Bokapp</a>
 
-    <!-- Hamburger button -->
     <button class="hamburger" (click)="menuOpen = !menuOpen">
       <i class="fa fa-bars"></i>
     </button>
@@ -47,11 +46,9 @@
     </ul>
   </div>
   <div class="text-end">
-    <button *ngIf="!isDarkTheme" (click)="toggleTheme()" class="btn btn-outline-secondary">
-      🌙
-    </button>
-    <button *ngIf="isDarkTheme" (click)="toggleTheme()" class="btn btn-outline-secondary">
-      ☀️
+    <button (click)="toggleTheme()" class="btn btn-outline-secondary">
+      <span *ngIf="!isDarkTheme">🌙</span>
+      <span *ngIf="isDarkTheme">☀️</span>
     </button>
   </div>
 </nav>

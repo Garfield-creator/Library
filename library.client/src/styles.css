@@ -8,3 +8,9 @@ router-outlet {
   display: block;
   margin-top: 60px;
 }
+
+@media (max-width: 766px) {
+  .book-text {
+    display: none !important;
+  }
+}
