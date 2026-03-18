@@ -8,11 +8,9 @@ using Library.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
-// DB Context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
@@ -24,9 +22,7 @@ if (string.IsNullOrEmpty(jwtKey))
     throw new Exception("JWT Key is missing from configuration");
 }
 
-// Authentication
-Console.WriteLine("JWT KEY: " + builder.Configuration["Jwt:Key"]);
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+var key = Encoding.UTF8.GetBytes(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -48,7 +44,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Jwt service
 builder.Services.AddScoped<JwtService>(_ =>
     new JwtService(
         builder.Configuration["Jwt:Key"],
