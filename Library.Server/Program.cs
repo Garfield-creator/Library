@@ -55,7 +55,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Angular", p =>
-    p.WithOrigins("https://localhost:57829")
+    p.WithOrigins("https://localhost:57829", "https://happy-mushroom-057094103.4.azurestaticapps.net")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
