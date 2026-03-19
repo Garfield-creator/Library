@@ -60,7 +60,7 @@ public class QuotesController : ControllerBase
 
     // POST: api/quotes
     [HttpPost]
-    public async Task<ActionResult<QuoteReadDto>> Post(QuoteCreateDto dto)
+    public async Task<ActionResult<QuoteReadDto>> Post(QuoteUpsertDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrWhiteSpace(userId))
@@ -100,7 +100,7 @@ public class QuotesController : ControllerBase
 
     // PUT: api/quotes/5
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put(int id, QuoteUpdateDto dto)
+    public async Task<IActionResult> Put(int id, QuoteUpsertDto dto)
     {
         var quote = await _db.Quotes.FindAsync(id);
 

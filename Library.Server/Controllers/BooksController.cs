@@ -75,7 +75,7 @@ public class BooksController : ControllerBase
     // PUT: api/books/5
     [Authorize]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put(int id, BookUpdateDto dto)
+    public async Task<IActionResult> Put(int id, BookUpsertDto dto)
     {
         var book = await _db.Books.FindAsync(id);
 
