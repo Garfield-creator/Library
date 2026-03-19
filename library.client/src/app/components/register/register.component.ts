@@ -16,6 +16,7 @@ export class RegisterComponent {
   form!: FormGroup;
   error: string | null = null;
   submitted = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -25,7 +26,6 @@ export class RegisterComponent {
   ) { }
 
   ngOnInit() {
-
     this.form = this.formBuilder.group({
       username: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -33,25 +33,26 @@ export class RegisterComponent {
     });
   }
 
-  onSubmit(): void {
+  submit(): void {
 
+    this.submitted = true;
+    
     if (this.form.invalid) {
       return;
     }
 
     this.error = null;
-    this.submitted = true;
+    this.loading = true;
 
     const { username, email, password } = this.form.value;
 
     this.authService.register(username, email, password).subscribe({
       next: () => {
-        this.submitted = false;
         this.router.navigate(['/books']);
       },
       error: (err) => {
 
-        this.submitted = false;
+        this.loading = false;
         if (err.error?.message) {
           this.error = JSON.stringify(err.error.message);
         } else if (err.error?.errors) {
@@ -60,7 +61,7 @@ export class RegisterComponent {
             .join(' ')
           this.error = messages;
         } else {
-          this.error = "Registrering misslyckades. Försök igen senare.";
+          this.error = "Ett oväntat fel inträffade. Försök igen senare.";
         }
         this.changeDetector.detectChanges();
       }
