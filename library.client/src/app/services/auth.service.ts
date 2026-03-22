@@ -51,9 +51,9 @@ export class AuthService {
 
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    const expMs = payload.exp * 1000; // exp is in seconds
+    const expMs = payload.exp * 1000;
     if (Date.now() > expMs) {
-      this.logout(); // remove token
+      this.logout();
       return false;
     }
     return true;

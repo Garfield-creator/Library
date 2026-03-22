@@ -26,13 +26,17 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
 
         var existingUser = await _userManager.FindByNameAsync(model.Username);
-
-        if (existingUser != null)
-            return BadRequest(new { message = "Användarnamnet är upptaget" });
-
         var existingEmail = await _userManager.FindByEmailAsync(model.Email);
 
-        if (existingEmail != null)
+        if (existingUser != null && existingEmail != null)
+        {
+            return BadRequest(new { message = "Användarnamnet och Email-adressen är upptagen" });
+        }
+
+        else if (existingUser != null)
+            return BadRequest(new { message = "Användarnamnet är upptaget" });
+
+        else if (existingEmail != null)
             return BadRequest(new { message = "Email-adressen är upptagen" });
 
         var user = new IdentityUser

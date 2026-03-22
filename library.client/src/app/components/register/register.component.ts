@@ -54,12 +54,14 @@ export class RegisterComponent {
 
         this.loading = false;
         if (err.error?.message) {
+          console.warn("Error message from server:", err.error.message);
           this.error = JSON.stringify(err.error.message);
         } else if (err.error?.errors) {
           const messages = Object.values(err.error.errors)
             .flat()
             .join(' ')
           this.error = messages;
+          console.warn("Error message from server:", messages);
         } else {
           this.error = "Ett oväntat fel inträffade. Försök igen senare.";
         }
