@@ -12,7 +12,7 @@ namespace Library.Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260310212335_quotes")]
-    partial class quotes
+    partial class Quotes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

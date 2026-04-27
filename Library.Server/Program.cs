@@ -16,10 +16,22 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 if (string.IsNullOrEmpty(jwtKey))
 {
     throw new Exception("JWT Key is missing from configuration");
+}
+
+if (string.IsNullOrEmpty(jwtIssuer))
+{
+    throw new Exception("JWT Issuer is missing from configuration");
+}
+
+if (string.IsNullOrEmpty(jwtAudience))
+{
+    throw new Exception("JWT Audience is missing from configuration");
 }
 
 var key = Encoding.UTF8.GetBytes(jwtKey);
@@ -38,17 +50,17 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
 
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
 builder.Services.AddScoped<JwtService>(_ =>
     new JwtService(
-        builder.Configuration["Jwt:Key"],
-        builder.Configuration["Jwt:Issuer"],
-        builder.Configuration["Jwt:Audience"]));
+        jwtKey,
+        jwtIssuer,
+        jwtAudience));
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();

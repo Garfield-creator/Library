@@ -5,7 +5,7 @@
 namespace Library.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class quotes : Migration
+    public partial class Quotes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
